@@ -40,14 +40,14 @@ def draw_start_menu():
     screen.fill("lightblue")
     
     # Draw Start button
-    pygame.draw.rect(screen, "green", start_button_rect)
+    pygame.draw.rect(screen, (34, 139, 34), start_button_rect) #Green Color Start button
     start_text = button_font.render("Start Game", True, "black")
-    screen.blit(start_text, (start_button_rect.x + 25, start_button_rect.y + 20))
+    screen.blit(start_text, (start_button_rect.x + 15, start_button_rect.y + 20))
     
     # Draw Exit button
     pygame.draw.rect(screen, "red", exit_button_rect)
-    exit_text = button_font.render("Exit", True, "black")
-    screen.blit(exit_text, (exit_button_rect.x + 65, exit_button_rect.y + 20))
+    exit_text = button_font.render("Exit Game", True, "black")
+    screen.blit(exit_text, (exit_button_rect.x + 25, exit_button_rect.y + 20))
     
     pygame.display.update()
 
