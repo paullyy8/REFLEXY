@@ -17,7 +17,7 @@ start_time = None  # Timer start time
 timer_running = False  # Check if the timer is running
 
 # Button properties
-button_width, button_height = 200, 100
+button_width, button_height = 220, 80
 start_button_rect = pygame.Rect((1280 // 2 - button_width // 2, 720 // 2 - 100), (button_width, button_height))
 exit_button_rect = pygame.Rect((1280 // 2 - button_width // 2, 720 // 2 + 50), (button_width, button_height))
 
@@ -28,19 +28,19 @@ def check_circle_collision() -> bool:
     return False
 
 def draw_buttons():
-    pygame.draw.rect(screen, "lightgray", start_button_rect)
-    pygame.draw.rect(screen, "lightgray", exit_button_rect)
-
-    # Render button text
-    start_text = button_font.render("Start Game", True, "black")
-    exit_text = button_font.render("Exit", True, "black")
-    
+    # Start button: green background, white text
+    pygame.draw.rect(screen, (34, 139, 34), start_button_rect)  # Green color
+    start_text = button_font.render("Start Game", True, "white")
     screen.blit(start_text, (start_button_rect.x + 20, start_button_rect.y + 20))
-    screen.blit(exit_text, (exit_button_rect.x + 60, exit_button_rect.y + 20))
+
+    # Exit button: red background, white text
+    pygame.draw.rect(screen, (178, 34, 34), exit_button_rect)  # Red color
+    exit_text = button_font.render("Exit Game", True, "white")
+    screen.blit(exit_text, (exit_button_rect.x + 20, exit_button_rect.y + 20))
 
 def main_menu():
     while True:
-        screen.fill("skyblue")
+        screen.fill("black")  # Set the background color to black
         draw_buttons()
         pygame.display.update()
 
