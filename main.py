@@ -40,7 +40,7 @@ def draw_buttons():
 
 def main_menu():
     while True:
-        screen.fill("black")  # Set the background color to black
+        screen.fill("light blue")  # Set the starting background color to light blue
         draw_buttons()
         pygame.display.update()
 
