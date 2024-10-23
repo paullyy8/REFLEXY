@@ -20,6 +20,7 @@ time_limit = 3  # 3-second time limit
 time_remaining = time_limit
 last_time_check = time.time()  # Track the last time the clock was checked
 circle_pos = (1280 / 2, 720 / 2)
+circle_radius = 30  # Reduced circle radius
 
 # Button Properties
 button_width, button_height = 220, 80
@@ -32,21 +33,21 @@ game_active = False  # Tracks whether the game has started
 def check_circle_collision() -> bool:
     """Check if the mouse is within the circle's boundary."""
     mouse_pos = pygame.mouse.get_pos()
-    return math.sqrt((mouse_pos[0] - circle_pos[0]) ** 2 + (mouse_pos[1] - circle_pos[1]) ** 2) <= 50
+    return math.sqrt((mouse_pos[0] - circle_pos[0]) ** 2 + (mouse_pos[1] - circle_pos[1]) ** 2) <= circle_radius
 
 def draw_start_menu():
     """Draws the start menu with 'Start Game' and 'Exit' buttons."""
     screen.fill("lightblue")
     
     # Draw Start button
-    pygame.draw.rect(screen, (34, 139, 34), start_button_rect) #Green Color Start button
-    start_text = button_font.render("Start Game", True, "white")
-    screen.blit(start_text, (start_button_rect.x + 20, start_button_rect.y + 20))
+    pygame.draw.rect(screen, "green", start_button_rect)
+    start_text = button_font.render("Start Game", True, "black")
+    screen.blit(start_text, (start_button_rect.x + 25, start_button_rect.y + 20))
     
     # Draw Exit button
     pygame.draw.rect(screen, "red", exit_button_rect)
-    exit_text = button_font.render("Exit Game", True, "white")
-    screen.blit(exit_text, (exit_button_rect.x + 25, exit_button_rect.y + 20))
+    exit_text = button_font.render("Exit", True, "black")
+    screen.blit(exit_text, (exit_button_rect.x + 65, exit_button_rect.y + 20))
     
     pygame.display.update()
 
@@ -62,7 +63,7 @@ while True:
                 if event.button == 1:  # Left click
                     if check_circle_collision():
                         score += 1
-                        circle_pos = (random.randint(50, 1230), random.randint(50, 670))  # New random position
+                        circle_pos = (random.randint(50 + circle_radius, 1230 - circle_radius), random.randint(50 + circle_radius, 670 - circle_radius))  # New random position
                         time_remaining = time_limit  # Reset the timer to 3 seconds
 
                         if not timer_running:
@@ -92,7 +93,7 @@ while True:
 
         # Draw everything
         screen.fill("lightblue")
-        pygame.draw.circle(screen, "black", circle_pos, 50)
+        pygame.draw.circle(screen, "black", circle_pos, circle_radius)
 
         # Render the score and timer
         score_surface = font.render(f'Score: {score}', True, "black")
