@@ -1,6 +1,12 @@
-# REFLEXY
+<div align="center">
+  <img src="./src/reflexy.png" width="100px" height="100px">
+  <h3>REFLEXY</h3>
+</div>
+
 
 REFLEXY is a simple yet engaging reflex-based game developed using Pygame. In this game, the player has to click a moving circle within a limited time frame. As the game progresses, the challenge increases as the time limit remains shor. Keep your score up by reacting quickly!
+
+<img src="./src/game.png" />
 
 ## Table of Contents
 1. [Introduction](#introduction)
