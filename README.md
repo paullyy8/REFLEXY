@@ -1,6 +1,6 @@
 # REFLEXY
 
-REFLEXY is a simple yet engaging reflex-based game developed using Pygame. In this game, the player has to click a moving circle within a limited time frame. As the game progresses, the challenge increases as the time limit remains short, and the circle size makes the game harder. Keep your score up by reacting quickly!
+REFLEXY is a simple yet engaging reflex-based game developed using Pygame. In this game, the player has to click a moving circle within a limited time frame. As the game progresses, the challenge increases as the time limit remains shor. Keep your score up by reacting quickly!
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -30,8 +30,8 @@ Follow these instructions to run REFLEXY on your local machine.
 ### Requirements
 
 Before you begin, ensure you have met the following requirements:
-- **Python 3.8+** must be installed on your system.
-- **Pygame** library needs to be installed.
+- **[Python 3.8+](https://www.python.org/downloads/)** must be installed on your system.
+- **[Pygame](https://www.pygame.org/download.shtml)** library needs to be installed.
 
 ### Installation
 
@@ -106,4 +106,4 @@ Thank you for checking out REFLEXY! Whether you're looking to sharpen your refle
 
 ---
 ## 
-<h3 align=center> Designed and Developed by Amit Paul </h3>
+<h3 align="center">Designed and Developed by <a href="https://bento.me/amit-paul">Amit Paul</a></h3>
