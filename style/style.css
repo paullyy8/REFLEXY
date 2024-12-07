@@ -1,0 +1,53 @@
+/* General Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f8ff; /* Light blue background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container for content */
+.container {
+  text-align: center;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+.container h1 {
+  font-size: 3rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Buttons */
+button {
+  font-size: 1.5rem;
+  padding: 10px 20px;
+  margin: 10px 0;
+  background-color: #007bff; /* Blue button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+button#exit-game {
+  background-color: #dc3545; /* Red button for exit */
+}
+
+button#exit-game:hover {
+  background-color: #a71d2a; /* Darker red on hover */
+}
