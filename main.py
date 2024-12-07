@@ -27,7 +27,7 @@ circle_radius = 30  # Reduced circle radius
 # Cursor trail variables
 trail_color = (0, 0, 255)  # Blue color
 trail_positions = []  # List to store the cursor positions
-trail_max_length = 15  # Maximum number of positions in the trail
+trail_max_length = 40  # Increased maximum number of positions in the trail
 
 # Button Properties
 button_width, button_height = 220, 80
