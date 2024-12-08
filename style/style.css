@@ -50,7 +50,7 @@ button#start-game:hover {
 }
 
 /* Exit Game Button */
-button#exit {
+button#exit-game {
   background-color: #dc3545; /* Red button */
   color: white;
 }
