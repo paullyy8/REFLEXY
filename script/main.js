@@ -5,5 +5,8 @@ document.getElementById("start-game").addEventListener("click", () => {
 
 // Exit Game button functionality
 document.getElementById("exit-game").addEventListener("click", () => {
-  window.close(); // Closes the current browser tab (may not work on all browsers)
+  const confirmExit = confirm("");
+  if (confirmExit) {
+    window.close();
+  }
 });
