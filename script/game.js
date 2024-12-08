@@ -144,5 +144,5 @@ restartButton.addEventListener('click', () => {
 });
 
 exitButton.addEventListener('click', () => {
-  window.close(); // Try to close the window (may not work on all browsers)
+  window.location.href = "index.html"; // Navigate to the index page instead of closing the window
 });
