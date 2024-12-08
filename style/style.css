@@ -31,23 +31,31 @@ body {
 button {
   font-size: 1.5rem;
   padding: 10px 40px; /* Increased padding for capsule-like look */
-  margin: 10px 20px; /* Adds horizontal spacing between buttons */
-  background-color: #007bff; /* Blue button */
-  color: white;
+  margin: 10px 10px; /* Adds horizontal spacing between buttons */
   border: none;
   border-radius: 30px; /* Makes the buttons capsule-shaped */
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+/* Start Game Button */
+button#start-game {
+  background-color: #28a745; /* Green button */
+  color: white;
 }
 
+button#start-game:hover {
+  background-color: #218838; /* Darker green on hover */
+  transform: scale(1.05); /* Slightly enlarges the button on hover */
+}
+
+/* Exit Game Button */
 button#exit-game {
-  background-color: #dc3545; /* Red button for exit */
+  background-color: #dc3545; /* Red button */
+  color: white;
 }
 
 button#exit-game:hover {
   background-color: #a71d2a; /* Darker red on hover */
+  transform: scale(1.05); /* Slightly enlarges the button on hover */
 }
