@@ -3,7 +3,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #6e7f84, #a2c2dc); /* Gradient background for modern feel */
+  background: linear-gradient(135deg, #6e7f84, #a2c2dc); /* Gradient background */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,17 +15,17 @@ body {
 .container {
   text-align: center;
   padding: 30px 40px;
-  background-color: rgba(255, 255, 255, 0.9); /* Slight transparency for a modern look */
+  background-color: rgba(255, 255, 255, 0.9);
   border: 2px solid #ccc;
-  border-radius: 15px; /* Rounded corners for a soft feel */
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Soft shadow */
-  backdrop-filter: blur(10px); /* Blurred background effect */
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
   transform: scale(0.98);
-  transition: all 0.3s ease; /* Smooth hover effect on container */
+  transition: all 0.3s ease;
 }
 
 .container:hover {
-  transform: scale(1); /* Subtle zoom effect */
+  transform: scale(1);
 }
 
 /* Heading */
@@ -33,62 +33,67 @@ body {
   font-size: 3.5rem;
   color: #333;
   margin-bottom: 20px;
-  letter-spacing: 2px; /* Add some space between letters */
-  animation: fadeIn 1s ease-out; /* Animation for header */
+  letter-spacing: 2px;
+  animation: fadeIn 1s ease-out;
 }
 
 .container p {
   font-size: 1.5rem;
   color: #555;
   margin-bottom: 30px;
-  animation: fadeIn 1s ease-out 0.3s; /* Delayed animation for subtext */
+  animation: fadeIn 1s ease-out 0.3s;
 }
 
 /* Buttons */
 button {
   font-size: 1.6rem;
-  padding: 12px 50px; /* Larger padding for better touch targets */
+  padding: 12px 50px;
   margin: 10px;
-  border: none;
-  border-radius: 35px; /* Rounded button shape */
+  border: 2px solid transparent; /* Transparent border initially */
+  border-radius: 35px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow on buttons */
+  color: white;
+  background-color: transparent; /* Transparent background initially */
+  font-weight: bold;
+  outline: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Start Game Button */
 button#start-game {
-  background-color: #28a745; /* Green button */
+  background-color: #28a745; /* Green background */
   color: white;
+  border-color: #28a745; /* Green border */
 }
 
 button#start-game:hover {
-  background-color: #218838; /* Darker green */
-  transform: scale(1.1); /* Larger scale on hover */
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+  background-color: transparent; /* Transparent background */
+  color: black; /* Text color changes to black */
+  border-color: #28a745; /* Green border stays */
+  box-shadow: 0 0 10px 2px rgba(40, 167, 69, 0.6); /* Neon green border glow */
+  transform: scale(1.05); /* Button scale on hover */
 }
 
 /* Exit Game Button */
 button#exit-game {
-  background-color: #dc3545; /* Red button */
+  background-color: #dc3545; /* Red background */
   color: white;
+  border-color: #dc3545; /* Red border */
 }
 
 button#exit-game:hover {
-  background-color: #a71d2a; /* Darker red */
-  transform: scale(1.1); /* Larger scale on hover */
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+  background-color: transparent; /* Transparent background */
+  color: black; /* Text color changes to black */
+  border-color: #dc3545; /* Red border stays */
+  box-shadow: 0 0 10px 2px rgba(220, 53, 69, 0.6); /* Neon red border glow */
+  transform: scale(1.05); /* Button scale on hover */
 }
 
 /* Button Active State for additional feedback */
 button:active {
-  transform: scale(1.05); /* Slightly reduce the scale for button press */
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Slightly darker shadow on click */
-}
-
-/* Hover Effects for the Box */
-.container:hover {
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* More intense shadow on hover */
+  transform: scale(1.02);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Header Fade-in Animation */
