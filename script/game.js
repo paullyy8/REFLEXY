@@ -94,15 +94,20 @@ function updateTimer() {
 
 // Draw UI (buttons, score, etc.)
 function drawEndScreen() {
-  // Score and Restart/Exit buttons
-  ctx.fillStyle = "lightblue";
+  // Draw Restart button
+  ctx.fillStyle = "#28a745"; // Green button
   ctx.fillRect(restartButton.x, restartButton.y, restartButton.width, restartButton.height);
-  ctx.fillRect(endExitButton.x, endExitButton.y, endExitButton.width, endExitButton.height);
+  ctx.fillStyle = "white";
+  ctx.font = "1.5rem Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("Restart", restartButton.x + restartButton.width / 2, restartButton.y + restartButton.height / 2);
 
-  ctx.fillStyle = "black";
-  ctx.fillText(`Score: ${score}`, canvas.width / 2 - 50, canvas.height / 2 - 30);
-  ctx.fillText("Restart", restartButton.x + 35, restartButton.y + 25);
-  ctx.fillText("Exit", endExitButton.x + 50, endExitButton.y + 25);
+  // Draw Exit button
+  ctx.fillStyle = "#dc3545"; // Red button
+  ctx.fillRect(endExitButton.x, endExitButton.y, endExitButton.width, endExitButton.height);
+  ctx.fillStyle = "white";
+  ctx.fillText("Exit", endExitButton.x + endExitButton.width / 2, endExitButton.y + endExitButton.height / 2);
 }
 
 function gameLoop() {
