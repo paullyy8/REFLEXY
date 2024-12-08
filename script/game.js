@@ -4,65 +4,129 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const trailLength = 20;
-const trailColor = "0,128,128"; // Dark Cyan (Teal)
-const trail = [];
+// Game variables
+let score = 0;
+let gameActive = true; // Start the game immediately
+let gameOver = false;
+let timerRunning = true;
+let timeLimit = 3; // 3-second time limit
+let timeRemaining = timeLimit;
+let lastTimeCheck = Date.now(); // Track the last time the clock was checked
 
-// Ball properties
-const ballRadius = 20;
-const ballColor = "black"; // Black color for the ball
-const ballX = canvas.width / 2; // Center X of the canvas
-const ballY = canvas.height / 2; // Center Y of the canvas
+// Circle properties
+const circleRadius = 30;
+let circlePos = { x: canvas.width / 2, y: canvas.height / 2 };
 
-// Smaller trail radius (e.g., 5 instead of 10)
-const trailDotRadius = 5;
+// Button properties (in canvas coordinates)
+const restartButton = { x: canvas.width / 2 - 75, y: canvas.height / 2 + 30, width: 150, height: 40 };
+const endExitButton = { x: canvas.width / 2 - 75, y: canvas.height / 2 + 80, width: 150, height: 40 };
 
-function draw() {
-  // Draw the trail first
-  ctx.fillStyle = "rgba(240, 248, 255, 0.2)"; // Light blue background with some transparency
-  ctx.fillRect(0, 0, canvas.width, canvas.height); // Background
-  
-  for (let i = 0; i < trail.length; i++) {
-    const alpha = 1;
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(trail[i].x, trail[i].y, trailDotRadius, 0, Math.PI * 2); // Use trailDotRadius here
-    ctx.fillStyle = `rgba(${trailColor},${alpha})`; // Draw the trail in Dark Cyan
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
+// Mouse position for clicking
+let lastMouseX = 0, lastMouseY = 0;
+canvas.addEventListener('mousemove', (e) => {
+  lastMouseX = e.clientX;
+  lastMouseY = e.clientY;
+});
+
+canvas.addEventListener('click', (e) => {
+  if (gameActive) {
+    if (checkCircleCollision(lastMouseX, lastMouseY)) {
+      score++;
+      // Move the circle to a new random position
+      circlePos = {
+        x: Math.random() * (canvas.width - circleRadius * 2) + circleRadius,
+        y: Math.random() * (canvas.height - circleRadius * 2) + circleRadius
+      };
+      timeRemaining = timeLimit; // Reset the timer
+      if (!timerRunning) {
+        lastTimeCheck = Date.now();
+        timerRunning = true;
+      }
+    }
+  } else if (gameOver) {
+    if (checkButtonClick(e.clientX, e.clientY, restartButton)) {
+      // Restart the game
+      score = 0;
+      timeRemaining = timeLimit;
+      circlePos = { x: canvas.width / 2, y: canvas.height / 2 };
+      gameActive = true;
+      gameOver = false;
+      timerRunning = true;
+      lastTimeCheck = Date.now();
+    } else if (checkButtonClick(e.clientX, e.clientY, endExitButton)) {
+      window.close(); // Exit the game
+    }
   }
+});
 
-  // Now, draw the ball in the center
+function checkCircleCollision(mouseX, mouseY) {
+  const dx = mouseX - circlePos.x;
+  const dy = mouseY - circlePos.y;
+  return Math.sqrt(dx * dx + dy * dy) <= circleRadius;
+}
+
+function checkButtonClick(x, y, button) {
+  return x > button.x && x < button.x + button.width && y > button.y && y < button.y + button.height;
+}
+
+// Draw game elements
+function drawCircle() {
   ctx.beginPath();
-  ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
-  ctx.fillStyle = ballColor; // Black color for the ball
+  ctx.arc(circlePos.x, circlePos.y, circleRadius, 0, Math.PI * 2);
+  ctx.fillStyle = "black"; // Circle color
   ctx.fill();
   ctx.closePath();
-
-  // Keep the animation running
-  window.requestAnimationFrame(draw);
 }
 
-function addTrailPoint(x, y) {
-  trail.push({ x, y });
-  if (trail.length > trailLength) {
-    trail.shift(); // Remove the first element when we exceed trail length
+function updateTimer() {
+  if (timerRunning) {
+    const currentTime = Date.now();
+    const elapsedTime = (currentTime - lastTimeCheck) / 1000; // Convert to seconds
+    timeRemaining -= elapsedTime;
+    lastTimeCheck = currentTime;
+
+    if (timeRemaining <= 0) {
+      gameActive = false;
+      gameOver = true;
+    }
   }
 }
 
-let mouseX = 0, mouseY = 0;
+// Draw UI (buttons, score, etc.)
+function drawEndScreen() {
+  // Score and Restart/Exit buttons
+  ctx.fillStyle = "lightblue";
+  ctx.fillRect(restartButton.x, restartButton.y, restartButton.width, restartButton.height);
+  ctx.fillRect(endExitButton.x, endExitButton.y, endExitButton.width, endExitButton.height);
 
-const startDrawing = (e) => {
-  const newX = e.clientX;
-  const newY = e.clientY;
-  addTrailPoint(newX, newY);
-  mouseX = newX;
-  mouseY = newY;
-};
+  ctx.fillStyle = "black";
+  ctx.fillText(`Score: ${score}`, canvas.width / 2 - 50, canvas.height / 2 - 30);
+  ctx.fillText("Restart", restartButton.x + 35, restartButton.y + 25);
+  ctx.fillText("Exit", endExitButton.x + 50, endExitButton.y + 25);
+}
 
-canvas.addEventListener("mousemove", startDrawing);
+function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-window.onload = () => {
-  window.requestAnimationFrame(draw);
-};
+  if (gameActive) {
+    // Update timer
+    updateTimer();
+
+    // Draw game elements
+    drawCircle();
+
+    // Draw score and timer
+    ctx.fillStyle = "black";
+    ctx.font = "30px Arial";
+    ctx.fillText(`Score: ${score}`, 50, 50);
+    ctx.fillText(`Time: ${Math.max(0, Math.floor(timeRemaining))}`, 50, 90);
+
+  } else if (gameOver) {
+    drawEndScreen();
+  }
+
+  requestAnimationFrame(gameLoop);
+}
+
+// Start the game loop immediately
+gameLoop();
