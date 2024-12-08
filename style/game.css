@@ -1,12 +1,13 @@
 body {
   margin: 0;
   overflow: hidden;
-  cursor: none;
   background-color: #f0f8ff; /* Light blue background */
 }
 
 canvas {
+  display: block;
   position: absolute;
   top: 0;
   left: 0;
+  cursor: default; /* Make sure the default cursor is visible */
 }
