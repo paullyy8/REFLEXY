@@ -6,7 +6,7 @@ canvas.height = window.innerHeight;
 
 // Game variables
 let score = 0;
-let gameActive = true; // Start the game immediately
+let gameActive = true;
 let gameOver = false;
 let timerRunning = true;
 let timeLimit = 3; // 3-second time limit
@@ -17,9 +17,13 @@ let lastTimeCheck = Date.now(); // Track the last time the clock was checked
 const circleRadius = 30;
 let circlePos = { x: canvas.width / 2, y: canvas.height / 2 };
 
-// Button properties (in canvas coordinates)
-const restartButton = { x: canvas.width / 2 - 75, y: canvas.height / 2 + 30, width: 150, height: 40 };
-const endExitButton = { x: canvas.width / 2 - 75, y: canvas.height / 2 + 80, width: 150, height: 40 };
+// Get the buttons from HTML
+const restartButton = document.getElementById("restart-game");
+const exitButton = document.getElementById("exit-game");
+
+// Hide the end buttons initially
+const endButtons = document.getElementById("end-buttons");
+endButtons.classList.add("hidden");
 
 // Mouse position for clicking
 let lastMouseX = 0, lastMouseY = 0;
@@ -53,7 +57,8 @@ canvas.addEventListener('click', (e) => {
       gameOver = false;
       timerRunning = true;
       lastTimeCheck = Date.now();
-    } else if (checkButtonClick(e.clientX, e.clientY, endExitButton)) {
+      endButtons.classList.add("hidden"); // Hide buttons again
+    } else if (checkButtonClick(e.clientX, e.clientY, exitButton)) {
       window.close(); // Exit the game
     }
   }
@@ -66,7 +71,8 @@ function checkCircleCollision(mouseX, mouseY) {
 }
 
 function checkButtonClick(x, y, button) {
-  return x > button.x && x < button.x + button.width && y > button.y && y < button.y + button.height;
+  return x > button.offsetLeft && x < button.offsetLeft + button.offsetWidth &&
+         y > button.offsetTop && y < button.offsetTop + button.offsetHeight;
 }
 
 // Draw game elements
@@ -88,26 +94,22 @@ function updateTimer() {
     if (timeRemaining <= 0) {
       gameActive = false;
       gameOver = true;
+      endButtons.classList.remove("hidden"); // Show the buttons
     }
   }
 }
 
 // Draw UI (buttons, score, etc.)
 function drawEndScreen() {
-  // Draw Restart button
-  ctx.fillStyle = "#28a745"; // Green button
-  ctx.fillRect(restartButton.x, restartButton.y, restartButton.width, restartButton.height);
-  ctx.fillStyle = "white";
-  ctx.font = "1.5rem Arial";
+  // Draw game over text and score
+  ctx.fillStyle = "black";
+  ctx.font = "30px Arial";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("Restart", restartButton.x + restartButton.width / 2, restartButton.y + restartButton.height / 2);
 
-  // Draw Exit button
-  ctx.fillStyle = "#dc3545"; // Red button
-  ctx.fillRect(endExitButton.x, endExitButton.y, endExitButton.width, endExitButton.height);
-  ctx.fillStyle = "white";
-  ctx.fillText("Exit", endExitButton.x + endExitButton.width / 2, endExitButton.y + endExitButton.height / 2);
+  ctx.fillText(`GAME OVER`, canvas.width / 2, canvas.height / 2 - 50);
+  ctx.fillText(`Your Score: ${score}`, canvas.width / 2, canvas.height / 2);
+
 }
 
 function gameLoop() {
@@ -135,3 +137,12 @@ function gameLoop() {
 
 // Start the game loop immediately
 gameLoop();
+
+// Add button click event listeners
+restartButton.addEventListener('click', () => {
+  location.reload(); // Reload the page to restart the game
+});
+
+exitButton.addEventListener('click', () => {
+  window.close(); // Try to close the window (may not work on all browsers)
+});
