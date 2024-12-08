@@ -1,13 +1,61 @@
+/* Hide the buttons by default */
+.hidden {
+  display: none;
+}
+
+/* Style for the buttons container */
+#end-buttons {
+  position: absolute;
+  top: 55%;  /* Adjusted to position buttons a bit below the center */
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10; /* Ensure the buttons are on top of the canvas */
+}
+
+/* Style for the button */
+button {
+  font-size: 1.5rem;
+  padding: 10px 40px;
+  margin: 10px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Green button for restart */
+#restart-game {
+  background-color: #28a745;
+  color: white;
+}
+
+#restart-game:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}
+
+/* Red button for exit */
+#exit-game {
+  background-color: #dc3545;
+  color: white;
+}
+
+#exit-game:hover {
+  background-color: #a71d2a;
+  transform: scale(1.05);
+}
+
+/* Styling for canvas and general page */
 body {
   margin: 0;
   overflow: hidden;
-  background-color: #f0f8ff; /* Light blue background */
+  position: relative;
+  height: 100vh;
 }
 
 canvas {
   display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  cursor: default; /* Make sure the default cursor is visible */
+  background-color: #f0f0f0;
+  z-index: 1; /* Ensure the canvas stays below the buttons */
 }
