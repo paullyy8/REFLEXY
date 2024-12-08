@@ -2,40 +2,63 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f0f8ff; /* Light blue background */
+  font-family: 'Arial', sans-serif;
+  background-color: #e8f1f8; /* Light soft blue background for a calm look */
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  box-sizing: border-box;
 }
 
 /* Container for content */
 .container {
   text-align: center;
-  padding: 20px;
+  padding: 40px 30px;
   background-color: #ffffff;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Subtle shadow for depth */
+  width: 320px; /* Fixed width for consistency */
+  max-width: 90%;
 }
 
 /* Heading */
 .container h1 {
-  font-size: 3rem;
+  font-size: 3.5rem;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Subheading text (for the description) */
+.subheading {
+  font-size: 1.25rem;
+  color: #555;
+  margin-bottom: 30px; /* More space to separate buttons */
+  line-height: 1.4;
+}
+
+/* Button container - Align buttons horizontally */
+.button-container {
+  display: flex;
+  justify-content: center; /* Centers the buttons horizontally */
+  gap: 20px; /* Space between buttons */
 }
 
 /* Buttons */
 button {
   font-size: 1.5rem;
-  padding: 10px 40px; /* Increased padding for capsule-like look */
-  margin: 10px 10px; /* Adds horizontal spacing between buttons */
+  padding: 12px 45px; /* Slightly larger padding for better feel */
+  margin: 0;
   border: none;
-  border-radius: 30px; /* Makes the buttons capsule-shaped */
+  border-radius: 30px; /* Capsule-shaped buttons */
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  width: auto; /* Buttons have auto width */
+  max-width: 180px; /* Set a max width for consistency */
+  height: 50px;
 }
 
 /* Start Game Button */
