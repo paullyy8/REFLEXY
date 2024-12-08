@@ -30,12 +30,12 @@ body {
 /* Buttons */
 button {
   font-size: 1.5rem;
-  padding: 10px 20px;
-  margin: 10px 0;
+  padding: 10px 40px; /* Increased padding for capsule-like look */
+  margin: 10px 20px; /* Adds horizontal spacing between buttons */
   background-color: #007bff; /* Blue button */
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 30px; /* Makes the buttons capsule-shaped */
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
