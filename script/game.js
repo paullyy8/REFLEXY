@@ -16,7 +16,7 @@ let lastTimeCheck = Date.now(); // Track the last time the clock was checked
 // Circle properties
 const circleRadius = 30;
 let circlePos = { x: canvas.width / 2, y: canvas.height / 2 };  // Start at the center
-let circleSpeed = 2; // Initial speed of the circle
+let circleSpeed = 1.5; // Initial speed of the circle, lower than before
 
 // Get the buttons from HTML
 const restartButton = document.getElementById("restart-game");
@@ -51,8 +51,8 @@ canvas.addEventListener('click', (e) => {
         timerRunning = true;
       }
 
-      // Increase the circle's speed after each click
-      circleSpeed += 0.2; // Increase speed slightly each time
+      // Increase the circle's speed gradually based on the score
+      circleSpeed = 1.5 + Math.floor(score / 20) * 0.2; // Increase speed after every 20 points
     }
   } else if (gameOver) {
     if (checkButtonClick(e.clientX, e.clientY, restartButton)) {
@@ -60,7 +60,7 @@ canvas.addEventListener('click', (e) => {
       score = 0;
       timeRemaining = timeLimit;
       circlePos = { x: canvas.width / 2, y: canvas.height / 2 };  // Ball starts at center
-      circleSpeed = 2; // Reset speed
+      circleSpeed = 1.5; // Reset initial speed
       gameActive = true;
       gameOver = false;
       timerRunning = true;
