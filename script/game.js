@@ -15,7 +15,8 @@ let lastTimeCheck = Date.now(); // Track the last time the clock was checked
 
 // Circle properties
 const circleRadius = 30;
-let circlePos = { x: canvas.width / 2, y: canvas.height / 2 };
+let circlePos = { x: canvas.width / 2, y: canvas.height / 2 };  // Start at the center
+let circleSpeed = 2; // Initial speed of the circle
 
 // Get the buttons from HTML
 const restartButton = document.getElementById("restart-game");
@@ -36,30 +37,37 @@ canvas.addEventListener('click', (e) => {
   if (gameActive) {
     if (checkCircleCollision(lastMouseX, lastMouseY)) {
       score++;
-      // Move the circle to a new random position
+
+      // New target position after a successful click
       circlePos = {
         x: Math.random() * (canvas.width - circleRadius * 2) + circleRadius,
         y: Math.random() * (canvas.height - circleRadius * 2) + circleRadius
       };
-      timeRemaining = timeLimit; // Reset the timer
+
+      // Reset the timer on each click
+      timeRemaining = timeLimit;
       if (!timerRunning) {
         lastTimeCheck = Date.now();
         timerRunning = true;
       }
+
+      // Increase the circle's speed after each click
+      circleSpeed += 0.2; // Increase speed slightly each time
     }
   } else if (gameOver) {
     if (checkButtonClick(e.clientX, e.clientY, restartButton)) {
       // Restart the game
       score = 0;
       timeRemaining = timeLimit;
-      circlePos = { x: canvas.width / 2, y: canvas.height / 2 };
+      circlePos = { x: canvas.width / 2, y: canvas.height / 2 };  // Ball starts at center
+      circleSpeed = 2; // Reset speed
       gameActive = true;
       gameOver = false;
       timerRunning = true;
       lastTimeCheck = Date.now();
       endButtons.classList.add("hidden"); // Hide buttons again
     } else if (checkButtonClick(e.clientX, e.clientY, exitButton)) {
-      window.close(); // Exit the game
+      window.location.href = "index.html"; // Navigate to the index page instead of closing the window
     }
   }
 });
@@ -109,7 +117,6 @@ function drawEndScreen() {
 
   ctx.fillText(`GAME OVER`, canvas.width / 2, canvas.height / 2 - 50);
   ctx.fillText(`Your Score: ${score}`, canvas.width / 2, canvas.height / 2);
-
 }
 
 function gameLoop() {
@@ -119,7 +126,7 @@ function gameLoop() {
     // Update timer
     updateTimer();
 
-    // Draw game elements
+    // Draw the circle at its current position
     drawCircle();
 
     // Draw score and timer
