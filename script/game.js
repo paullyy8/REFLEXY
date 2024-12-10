@@ -19,6 +19,7 @@ let circlePos = { x: canvas.width / 2, y: canvas.height / 2 };  // Start at the 
 let circleSpeed = 1.2; // Initial speed of the circle (slower)
 let circleVelocity = { x: 1, y: 1 }; // Initial velocity direction
 let circleColor = getRandomColor(); // Initial random color
+let lastColorChangeScore = 0; // Track the score when the color last changed
 
 // Ball disappearance properties
 let isBallVisible = true; // Flag to track visibility
@@ -62,6 +63,12 @@ canvas.addEventListener('click', (e) => {
 
       // Increase the circle's speed based on the score
       updateCircleSpeed();
+
+      // Change color every 10 points
+      if (score % 10 === 0 && score !== lastColorChangeScore) {
+        circleColor = getRandomColor(); // Change to a new random color
+        lastColorChangeScore = score; // Update the last color change score
+      }
     }
   } else if (gameOver) {
     if (checkButtonClick(e.clientX, e.clientY, restartButton)) {
@@ -129,10 +136,13 @@ function handleBallDisappearance() {
       isBallVisible = true;  // Make it visible again
       // Restart the timer when the ball reappears
       timeRemaining = timeLimit;
+      timerRunning = true; // Ensure the timer resumes when the ball reappears
       // Reduce the visibility duration of the ball as the score increases
       disappearDuration = Math.max(300, 700 - Math.floor(score / 5) * 50); // Shorter disappear duration
     } else {
       isBallVisible = false;  // Make it disappear
+      // Pause the timer when the ball disappears
+      timerRunning = false;
     }
 
     // Randomly decide to make the ball disappear (only after reaching a certain score)
@@ -186,8 +196,9 @@ function updateTimer() {
     lastTimeCheck = currentTime;
 
     // Gradually reduce time limit based on score
-    timeLimit = Math.max(0.5, 2 - Math.floor(score / 5) * 0.1); // Reduce time limit slowly
+    timeLimit = Math.max(0.5, 2 - Math.floor(score / 10) * 0.1); // Reduce time limit over time
 
+    // Check if time has run out
     if (timeRemaining <= 0) {
       gameActive = false;
       gameOver = true;
@@ -212,16 +223,14 @@ function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   if (gameActive) {
-    // Apply shake effect
-    applyShakeEffect();
+    // Update timer
+    updateTimer();
 
     // Handle ball disappearance logic
     handleBallDisappearance();
 
-    // Update timer only if the timer is running (not paused when the ball disappears)
-    if (timerRunning) {
-      updateTimer();
-    }
+    // Apply shake effect
+    applyShakeEffect();
 
     // Draw the circle at its current position
     drawCircle();
