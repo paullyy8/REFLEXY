@@ -121,6 +121,8 @@ function handleBallDisappearance() {
     // If the ball has been visible long enough, make it disappear
     if (currentTime - lastDisappearTime > disappearDuration) {
       isBallVisible = true;  // Make it visible again
+      // Restart the timer when the ball reappears
+      timeRemaining = timeLimit;
     } else {
       isBallVisible = false;  // Make it disappear
     }
@@ -129,6 +131,8 @@ function handleBallDisappearance() {
     if (Math.random() < (0.02 + score * 0.005) && score >= disappearThreshold) {
       lastDisappearTime = currentTime;  // Track time of disappearance
       isBallVisible = false;
+      // Pause the timer when the ball disappears
+      timerRunning = false;
     }
   }
 }
@@ -178,11 +182,13 @@ function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   if (gameActive) {
-    // Update timer
-    updateTimer();
-
     // Handle ball disappearance logic
     handleBallDisappearance();
+
+    // Update timer only if the timer is running (not paused when the ball disappears)
+    if (timerRunning) {
+      updateTimer();
+    }
 
     // Draw the circle at its current position
     drawCircle();
