@@ -15,21 +15,16 @@ let lastTimeCheck = Date.now(); // Track the last time the clock was checked
 
 // Circle properties
 let circleRadius = 30;
-let circlePos = { x: canvas.width / 2, y: canvas.height / 2 };  // Start at the center
+let circlePos = { x: canvas.width / 2, y: canvas.height / 2 }; // Start at the center
 let circleSpeed = 1.2; // Initial speed of the circle (slower)
 let circleVelocity = { x: 1, y: 1 }; // Initial velocity direction
-let circleColor = getRandomColor(); // Initial random color
-let lastColorChangeScore = 0; // Track the score when the color last changed
+let circleColor = '#6200ea'; // Default purple color for the circle
 
 // Ball disappearance properties
 let isBallVisible = true; // Flag to track visibility
-let disappearDuration = 700; // Initial ball disappearance duration (in ms)
+let disappearDuration = 700; // 700ms for the ball to disappear
 let lastDisappearTime = 0; // Time when the ball was last made to disappear
 let disappearThreshold = 20; // Threshold score for starting to disappear
-
-// Shake effect properties
-let shakeIntensity = 0;
-let shakeDuration = 0;
 
 // Get the buttons from HTML
 const restartButton = document.getElementById("restart-game");
@@ -38,6 +33,11 @@ const exitButton = document.getElementById("exit-game");
 // Hide the end buttons initially
 const endButtons = document.getElementById("end-buttons");
 endButtons.classList.add("hidden");
+
+// Score and Timer display element
+const scoreTimerDisplay = document.getElementById('score-timer');
+const scoreDisplay = scoreTimerDisplay.querySelector('.score');
+const timerDisplay = scoreTimerDisplay.querySelector('.timer');
 
 // Mouse position for clicking
 let lastMouseX = 0, lastMouseY = 0;
@@ -51,6 +51,9 @@ canvas.addEventListener('click', (e) => {
     if (checkCircleCollision(lastMouseX, lastMouseY) && isBallVisible) {
       score++;
 
+      // Update score display
+      scoreDisplay.textContent = `Score: ${score}`;
+
       // New target position after a successful click
       updateCirclePosition();
 
@@ -63,22 +66,15 @@ canvas.addEventListener('click', (e) => {
 
       // Increase the circle's speed based on the score
       updateCircleSpeed();
-
-      // Change color every 10 points
-      if (score % 10 === 0 && score !== lastColorChangeScore) {
-        circleColor = getRandomColor(); // Change to a new random color
-        lastColorChangeScore = score; // Update the last color change score
-      }
     }
   } else if (gameOver) {
     if (checkButtonClick(e.clientX, e.clientY, restartButton)) {
       // Restart the game
       score = 0;
       timeRemaining = timeLimit;
-      circlePos = { x: canvas.width / 2, y: canvas.height / 2 };  // Ball starts at center
+      circlePos = { x: canvas.width / 2, y: canvas.height / 2 }; // Ball starts at center
       circleSpeed = 1.2; // Reset initial speed
       circleRadius = 30; // Reset initial radius
-      circleColor = getRandomColor(); // Reset random color
       circleVelocity = { x: 1, y: 1 }; // Reset initial velocity
       gameActive = true;
       gameOver = false;
@@ -91,6 +87,7 @@ canvas.addEventListener('click', (e) => {
   }
 });
 
+// Check collision between mouse click and circle
 function checkCircleCollision(mouseX, mouseY) {
   const dx = mouseX - circlePos.x;
   const dy = mouseY - circlePos.y;
@@ -102,159 +99,60 @@ function checkButtonClick(x, y, button) {
          y > button.offsetTop && y < button.offsetTop + button.offsetHeight;
 }
 
-// Update circle position with complex movement patterns
+// Update circle position with a smooth motion pattern
 function updateCirclePosition() {
-  // Define a margin from the edges (e.g., 50px)
-  const margin = 50;
+  const minX = 100;
+  const maxX = canvas.width - 100;
+  const minY = 100;
+  const maxY = canvas.height - 100;
 
-  // Randomly choose a movement pattern
-  const movementPattern = Math.random();
+  circlePos.x = Math.random() * (maxX - minX) + minX;
+  circlePos.y = Math.random() * (maxY - minY) + minY;
 
-  if (movementPattern < 0.33) {
-    // Sinusoidal motion (wave-like)
-    const waveSpeed = Math.random() * 2 + 1;
-    circlePos.x += Math.sin(Date.now() / 1000 * waveSpeed) * 10; // Horizontal wave motion
-    circlePos.y += Math.cos(Date.now() / 1000 * waveSpeed) * 10; // Vertical wave motion
-  } else if (movementPattern < 0.66) {
-    // Spiral motion
-    const spiralSpeed = Math.random() * 2 + 1;
-    const angle = Date.now() / 1000 * spiralSpeed; // Angle for the spiral
-    const radius = Math.sin(angle) * 50 + 100; // Changing radius to form a spiral
-    circlePos.x += Math.cos(angle) * radius;
-    circlePos.y += Math.sin(angle) * radius;
-  } else {
-    // Random direction and speed changes
-    const angle = Math.random() * Math.PI * 2; // Random angle
-    const distance = Math.random() * 400 + 300; // Random distance
-    circlePos.x += Math.cos(angle) * distance;
-    circlePos.y += Math.sin(angle) * distance;
+  // Randomize the ball color every 10 clicks
+  if (score % 10 === 0) {
+    circleColor = getRandomColor();
   }
-
-  // Ensure that the circle stays within bounds, leaving a margin from the edges
-  circlePos.x = Math.max(circleRadius + margin, Math.min(canvas.width - circleRadius - margin, circlePos.x));
-  circlePos.y = Math.max(circleRadius + margin, Math.min(canvas.height - circleRadius - margin, circlePos.y));
 }
 
-// Update circle's speed and size based on score
+// Update circle speed based on score
 function updateCircleSpeed() {
-  // Aggressive exponential growth for speed, making it harder to track
-  circleSpeed = 1.2 + Math.pow(Math.floor(score / 3), 2) * 0.6; // Faster speed increase
-
-  // Shrink the circle size faster with higher score
-  circleRadius = 30 - Math.floor(score / 2) * 3 + Math.random() * 4; // Shrink circle faster
-  if (circleRadius < 5) circleRadius = 5; // Min circle size
-}
-
-// Ball disappearance logic
-function handleBallDisappearance() {
-  if (score >= disappearThreshold) {
-    const currentTime = Date.now();
-    
-    // If the ball has been visible long enough, make it disappear
-    if (currentTime - lastDisappearTime > disappearDuration) {
-      isBallVisible = true;  // Make it visible again
-      // Restart the timer when the ball reappears
-      timeRemaining = timeLimit;
-      timerRunning = true; // Ensure the timer resumes when the ball reappears
-      // Reduce the visibility duration of the ball as the score increases
-      disappearDuration = Math.max(300, 700 - Math.floor(score / 5) * 50); // Shorter disappear duration
-    } else {
-      isBallVisible = false;  // Make it disappear
-      // Pause the timer when the ball disappears
-      timerRunning = false;
-    }
-
-    // Randomly decide to make the ball disappear (only after reaching a certain score)
-    if (Math.random() < (0.02 + score * 0.005) && score >= disappearThreshold) {
-      lastDisappearTime = currentTime;  // Track time of disappearance
-      isBallVisible = false;
-      // Pause the timer when the ball disappears
-      timerRunning = false;
-    }
+  if (score % 5 === 0) {
+    circleSpeed += 0.1;
+    circleRadius = Math.max(20, circleRadius - 2); // Ball size shrinks a little with every 5 points
   }
 }
 
-// Random color generator for the circle
 function getRandomColor() {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
+  const colors = ['#6200ea', '#ff5722', '#4caf50', '#00bcd4', '#f44336', '#9c27b0'];
+  return colors[Math.floor(Math.random() * colors.length)];
 }
 
-// Shake effect
-function applyShakeEffect() {
-  if (shakeDuration > 0) {
-    const shakeX = Math.random() * shakeIntensity - shakeIntensity / 2;
-    const shakeY = Math.random() * shakeIntensity - shakeIntensity / 2;
-    ctx.translate(shakeX, shakeY);
-    shakeDuration--;
-  } else {
-    shakeIntensity = 0; // Reset shake when duration is over
-  }
-}
-
-// Draw game elements
-function drawCircle() {
-  if (isBallVisible) {
-    ctx.beginPath();
-    ctx.arc(circlePos.x, circlePos.y, circleRadius, 0, Math.PI * 2);
-    ctx.fillStyle = circleColor; // Circle color
-    ctx.fill();
-    ctx.closePath();
-  }
-}
-
-function updateTimer() {
-  if (timerRunning) {
-    const currentTime = Date.now();
-    const elapsedTime = (currentTime - lastTimeCheck) / 1000; // Convert to seconds
-    timeRemaining -= elapsedTime;
-    lastTimeCheck = currentTime;
-
-    if (timeRemaining <= 0) {
-      gameActive = false;
-      gameOver = true;
-      endButtons.classList.remove("hidden"); // Show the buttons
-    }
-  }
-}
-
-// Draw UI (buttons, score, etc.)
-function drawEndScreen() {
-  ctx.fillStyle = "black";
-  ctx.font = "30px Arial";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-
-  ctx.fillText(`GAME OVER`, canvas.width / 2, canvas.height / 2 - 50);
-  ctx.fillText(`Your Score: ${score}`, canvas.width / 2, canvas.height / 2);
-}
-
+// Game loop to keep track of the ball's state and the timer
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   if (gameActive) {
-    // Update timer
-    updateTimer();
+    // Timer Logic
+    const now = Date.now();
+    if (timerRunning) {
+      timeRemaining -= (now - lastTimeCheck) / 1000;
+      lastTimeCheck = now;
+    }
 
-    // Handle ball disappearance logic
-    handleBallDisappearance();
-
-    // Apply shake effect if needed
-    applyShakeEffect();
+    // Handle timer
+    if (timeRemaining <= 0) {
+      gameActive = false;
+      gameOver = true;
+      timerRunning = false;
+      endButtons.classList.remove("hidden"); // Show end screen buttons
+    }
 
     // Draw the circle at its current position
     drawCircle();
 
-    // Draw score and timer
-    ctx.fillStyle = "black";
-    ctx.font = "30px Arial";
-    ctx.fillText(`Score: ${score}`, 50, 50);
-    ctx.fillText(`Time: ${Math.max(0, Math.floor(timeRemaining))}`, 50, 90);
-
+    // Update the timer display
+    timerDisplay.textContent = `Time: ${Math.max(0, Math.floor(timeRemaining))}`;
   } else if (gameOver) {
     drawEndScreen();
   }
@@ -262,8 +160,40 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-// Start the game loop immediately
-gameLoop();
+// Draw the circle at its current position
+function drawCircle() {
+  if (isBallVisible) {
+    ctx.beginPath();
+    ctx.arc(circlePos.x, circlePos.y, circleRadius, 0, Math.PI * 2);
+    ctx.fillStyle = circleColor;
+    ctx.fill();
+    ctx.closePath();
+  }
+}
+
+// Draw the Game Over screen
+function drawEndScreen() {
+  ctx.fillStyle = "black";
+  ctx.font = "30px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(`GAME OVER`, canvas.width / 2, canvas.height / 2 - 50);
+  ctx.fillText(`Your Score: ${score}`, canvas.width / 2, canvas.height / 2);
+}
+
+// Add a method to draw rounded rectangles
+CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+  this.beginPath();
+  this.moveTo(x + radius, y);
+  this.arcTo(x + width, y, x + width, y + height, radius);
+  this.arcTo(x + width, y + height, x, y + height, radius);
+  this.arcTo(x, y + height, x, y, radius);
+  this.arcTo(x, y, x + width, y, radius);
+  this.closePath();
+  return this;
+};
+
+gameLoop(); // Start the game loop
 
 // Add button click event listeners
 restartButton.addEventListener('click', () => {
