@@ -19,6 +19,12 @@ let circlePos = { x: canvas.width / 2, y: canvas.height / 2 };  // Start at the 
 let circleSpeed = 1.2; // Initial speed of the circle (slower)
 let circleVelocity = { x: 1, y: 1 }; // Initial velocity direction
 
+// Ball disappearance properties
+let isBallVisible = true; // Flag to track visibility
+let disappearDuration = 500; // 500ms for the ball to disappear
+let lastDisappearTime = 0; // Time when the ball was last made to disappear
+let disappearThreshold = 20; // Threshold score for starting to disappear
+
 // Get the buttons from HTML
 const restartButton = document.getElementById("restart-game");
 const exitButton = document.getElementById("exit-game");
@@ -36,7 +42,7 @@ canvas.addEventListener('mousemove', (e) => {
 
 canvas.addEventListener('click', (e) => {
   if (gameActive) {
-    if (checkCircleCollision(lastMouseX, lastMouseY)) {
+    if (checkCircleCollision(lastMouseX, lastMouseY) && isBallVisible) {
       score++;
 
       // New target position after a successful click
@@ -106,13 +112,35 @@ function updateCircleSpeed() {
   if (circleRadius < 8) circleRadius = 8; // Min circle size
 }
 
+// Ball disappearance logic
+function handleBallDisappearance() {
+  if (score >= disappearThreshold) {
+    const currentTime = Date.now();
+    
+    // If the ball has been visible long enough, make it disappear
+    if (currentTime - lastDisappearTime > disappearDuration) {
+      isBallVisible = true;  // Make it visible again
+    } else {
+      isBallVisible = false;  // Make it disappear
+    }
+
+    // Randomly decide to make the ball disappear (only after reaching a certain score)
+    if (Math.random() < 0.02 && score >= disappearThreshold) {
+      lastDisappearTime = currentTime;  // Track time of disappearance
+      isBallVisible = false;
+    }
+  }
+}
+
 // Draw game elements
 function drawCircle() {
-  ctx.beginPath();
-  ctx.arc(circlePos.x, circlePos.y, circleRadius, 0, Math.PI * 2);
-  ctx.fillStyle = "black"; // Circle color
-  ctx.fill();
-  ctx.closePath();
+  if (isBallVisible) {
+    ctx.beginPath();
+    ctx.arc(circlePos.x, circlePos.y, circleRadius, 0, Math.PI * 2);
+    ctx.fillStyle = "black"; // Circle color
+    ctx.fill();
+    ctx.closePath();
+  }
 }
 
 function updateTimer() {
@@ -148,6 +176,9 @@ function gameLoop() {
   if (gameActive) {
     // Update timer
     updateTimer();
+
+    // Handle ball disappearance logic
+    handleBallDisappearance();
 
     // Draw the circle at its current position
     drawCircle();
