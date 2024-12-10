@@ -71,49 +71,28 @@ button:active {
   transform: translateY(1px); /* Slight depression effect */
 }
 
-/* Score and Timer Box Styling */
+/* Stylize the score and timer text */
 #score-timer {
   position: absolute;
   top: 20px;
   left: 20px;
-  width: 200px;
-  height: 80px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(0, 0, 0, 0.2)); /* Transparent gradient */
-  color: white;
-  font-family: 'Roboto', sans-serif;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Slight shadow */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
   font-size: 1.2rem;
+  color: #333;
   font-weight: 500;
-  transition: transform 0.3s ease-in-out;
-  backdrop-filter: blur(8px); /* Add a blur effect to background */
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Score and Timer styling */
-#score-timer p {
-  margin: 0;
-  padding: 0;
-  font-size: 1.2rem;
-}
-
-/* Hover effect for score and timer box */
-#score-timer:hover {
-  transform: scale(1.05); /* Slight scale effect when hovered */
-}
-
-#score-timer .score {
-  font-size: 1.4rem;
-  font-weight: bold;
-}
-
-#score-timer .timer {
-  font-size: 1.2rem;
-  font-weight: normal;
+/* Add a clean box for Game Over message */
+#game-over-message {
+  font-size: 2rem;
+  color: #333;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 20px;
 }
 
 /* Material Icon button styles */
