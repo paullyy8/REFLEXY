@@ -9,15 +9,15 @@ let score = 0;
 let gameActive = true;
 let gameOver = false;
 let timerRunning = true;
-let timeLimit = 3; // 3-second time limit
+let timeLimit = 2; // Reduced time limit (2 seconds per click)
 let timeRemaining = timeLimit;
 let lastTimeCheck = Date.now(); // Track the last time the clock was checked
 
 // Circle properties
-const circleRadius = 30;
+let circleRadius = 30;
 let circlePos = { x: canvas.width / 2, y: canvas.height / 2 };  // Start at the center
 let circleSpeed = 1.2; // Initial speed of the circle (slower)
-
+let circleVelocity = { x: 1, y: 1 }; // Initial velocity direction
 
 // Get the buttons from HTML
 const restartButton = document.getElementById("restart-game");
@@ -40,10 +40,7 @@ canvas.addEventListener('click', (e) => {
       score++;
 
       // New target position after a successful click
-      circlePos = {
-        x: Math.random() * (canvas.width - circleRadius * 2) + circleRadius,
-        y: Math.random() * (canvas.height - circleRadius * 2) + circleRadius
-      };
+      updateCirclePosition();
 
       // Reset the timer on each click
       timeRemaining = timeLimit;
@@ -53,7 +50,7 @@ canvas.addEventListener('click', (e) => {
       }
 
       // Increase the circle's speed based on the score
-      circleSpeed = 1.2 + Math.floor(score / 20) * 0.4; // Increase speed more significantly after every 20 points
+      updateCircleSpeed();
     }
   } else if (gameOver) {
     if (checkButtonClick(e.clientX, e.clientY, restartButton)) {
@@ -62,6 +59,8 @@ canvas.addEventListener('click', (e) => {
       timeRemaining = timeLimit;
       circlePos = { x: canvas.width / 2, y: canvas.height / 2 };  // Ball starts at center
       circleSpeed = 1.2; // Reset initial speed
+      circleRadius = 30; // Reset initial radius
+      circleVelocity = { x: 1, y: 1 }; // Reset initial velocity
       gameActive = true;
       gameOver = false;
       timerRunning = true;
@@ -82,6 +81,29 @@ function checkCircleCollision(mouseX, mouseY) {
 function checkButtonClick(x, y, button) {
   return x > button.offsetLeft && x < button.offsetLeft + button.offsetWidth &&
          y > button.offsetTop && y < button.offsetTop + button.offsetHeight;
+}
+
+// Update circle position with a smooth motion pattern
+function updateCirclePosition() {
+  // Randomization for larger movement distances, making it much harder to catch
+  const angle = Math.random() * Math.PI * 2; // Random angle for direction
+  const distance = Math.random() * 400 + 300; // Increased distance for movement
+  circlePos.x += Math.cos(angle) * distance;
+  circlePos.y += Math.sin(angle) * distance;
+
+  // Keep the circle within canvas bounds
+  circlePos.x = Math.max(circleRadius, Math.min(canvas.width - circleRadius, circlePos.x));
+  circlePos.y = Math.max(circleRadius, Math.min(canvas.height - circleRadius, circlePos.y));
+}
+
+// Update circle's speed and size based on score
+function updateCircleSpeed() {
+  // Very aggressive exponential growth for speed, making it hard to track
+  circleSpeed = 1.2 + Math.pow(Math.floor(score / 3), 1.5) * 0.6; // Higher exponent for faster speed
+  
+  // Shrink the circle size faster with higher score
+  circleRadius = 30 - Math.floor(score / 4) * 3 + Math.random() * 4; // Rapidly shrinking circle
+  if (circleRadius < 8) circleRadius = 8; // Min circle size
 }
 
 // Draw game elements
