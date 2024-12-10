@@ -9,7 +9,7 @@ let score = 0;
 let gameActive = true;
 let gameOver = false;
 let timerRunning = true;
-let timeLimit = 2; // Reduced time limit (2 seconds per click)
+let timeLimit = 2; // Initial time limit (2 seconds per click)
 let timeRemaining = timeLimit;
 let lastTimeCheck = Date.now(); // Track the last time the clock was checked
 
@@ -94,8 +94,9 @@ function updateCirclePosition() {
   // Randomization for larger movement distances, making it much harder to catch
   const angle = Math.random() * Math.PI * 2; // Random angle for direction
   const distance = Math.random() * 400 + 300; // Increased distance for movement
-  circlePos.x += Math.cos(angle) * distance;
-  circlePos.y += Math.sin(angle) * distance;
+  const speedFactor = Math.random() * 2 + 0.5; // Introduce variability in speed
+  circlePos.x += Math.cos(angle) * distance * speedFactor;
+  circlePos.y += Math.sin(angle) * distance * speedFactor;
 
   // Keep the circle within canvas bounds
   circlePos.x = Math.max(circleRadius, Math.min(canvas.width - circleRadius, circlePos.x));
@@ -104,12 +105,12 @@ function updateCirclePosition() {
 
 // Update circle's speed and size based on score
 function updateCircleSpeed() {
-  // Very aggressive exponential growth for speed, making it hard to track
-  circleSpeed = 1.2 + Math.pow(Math.floor(score / 3), 1.5) * 0.6; // Higher exponent for faster speed
-  
+  // Aggressive exponential growth for speed, making it harder to track
+  circleSpeed = 1.2 + Math.pow(Math.floor(score / 3), 2) * 0.6; // Faster speed increase
+
   // Shrink the circle size faster with higher score
-  circleRadius = 30 - Math.floor(score / 4) * 3 + Math.random() * 4; // Rapidly shrinking circle
-  if (circleRadius < 8) circleRadius = 8; // Min circle size
+  circleRadius = 30 - Math.floor(score / 2) * 3 + Math.random() * 4; // Shrink circle faster
+  if (circleRadius < 5) circleRadius = 5; // Min circle size
 }
 
 // Ball disappearance logic
@@ -125,7 +126,7 @@ function handleBallDisappearance() {
     }
 
     // Randomly decide to make the ball disappear (only after reaching a certain score)
-    if (Math.random() < 0.02 && score >= disappearThreshold) {
+    if (Math.random() < (0.02 + score * 0.005) && score >= disappearThreshold) {
       lastDisappearTime = currentTime;  // Track time of disappearance
       isBallVisible = false;
     }
@@ -149,6 +150,9 @@ function updateTimer() {
     const elapsedTime = (currentTime - lastTimeCheck) / 1000; // Convert to seconds
     timeRemaining -= elapsedTime;
     lastTimeCheck = currentTime;
+
+    // Gradually reduce time limit based on score
+    timeLimit = Math.max(0.5, 2 - Math.floor(score / 5) * 0.1); // Reduce time limit slowly
 
     if (timeRemaining <= 0) {
       gameActive = false;
