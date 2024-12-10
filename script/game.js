@@ -207,6 +207,42 @@ function drawCircle() {
   }
 }
 
+// Draw the score and timer in a box
+function drawScoreAndTimer() {
+  // Box properties
+  const boxPadding = 20;
+  const boxWidth = 200;
+  const boxHeight = 100;
+  const boxX = 50; // X position of the box
+  const boxY = 50; // Y position of the box
+
+  // Draw the background box (semi-transparent)
+  ctx.fillStyle = "rgba(0, 0, 0, 0.5)"; // Black with some transparency
+  ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+
+  // Draw the score and timer inside the box
+  ctx.fillStyle = "white"; // Text color
+  ctx.font = "30px Arial";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+  
+  // Display the score
+  ctx.fillText(`Score: ${score}`, boxX + boxPadding, boxY + boxPadding);
+
+  // Display the timer
+  ctx.fillText(`Time: ${Math.max(0, Math.floor(timeRemaining))}`, boxX + boxPadding, boxY + boxPadding + 40);
+}
+
+function drawEndScreen() {
+  ctx.fillStyle = "black";
+  ctx.font = "30px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  ctx.fillText(`GAME OVER`, canvas.width / 2, canvas.height / 2 - 50);
+  ctx.fillText(`Your Score: ${score}`, canvas.width / 2, canvas.height / 2);
+}
+
 function updateTimer() {
   if (timerRunning) {
     const currentTime = Date.now();
@@ -222,17 +258,7 @@ function updateTimer() {
   }
 }
 
-// Draw UI (buttons, score, etc.)
-function drawEndScreen() {
-  ctx.fillStyle = "black";
-  ctx.font = "30px Arial";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-
-  ctx.fillText(`GAME OVER`, canvas.width / 2, canvas.height / 2 - 50);
-  ctx.fillText(`Your Score: ${score}`, canvas.width / 2, canvas.height / 2);
-}
-
+// Main game loop
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -249,11 +275,8 @@ function gameLoop() {
     // Draw the circle at its current position
     drawCircle();
 
-    // Draw score and timer
-    ctx.fillStyle = "black";
-    ctx.font = "30px Arial";
-    ctx.fillText(`Score: ${score}`, 50, 50);
-    ctx.fillText(`Time: ${Math.max(0, Math.floor(timeRemaining))}`, 50, 90);
+    // Draw the score and timer in a box
+    drawScoreAndTimer();
 
   } else if (gameOver) {
     drawEndScreen();
