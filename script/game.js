@@ -18,12 +18,17 @@ let circleRadius = 30;
 let circlePos = { x: canvas.width / 2, y: canvas.height / 2 };  // Start at the center
 let circleSpeed = 1.2; // Initial speed of the circle (slower)
 let circleVelocity = { x: 1, y: 1 }; // Initial velocity direction
+let circleColor = getRandomColor(); // Initial random color
 
 // Ball disappearance properties
 let isBallVisible = true; // Flag to track visibility
-let disappearDuration = 700; // 700ms for the ball to disappear
+let disappearDuration = 700; // Initial ball disappearance duration (in ms)
 let lastDisappearTime = 0; // Time when the ball was last made to disappear
 let disappearThreshold = 20; // Threshold score for starting to disappear
+
+// Shake effect properties
+let shakeIntensity = 0;
+let shakeDuration = 0;
 
 // Get the buttons from HTML
 const restartButton = document.getElementById("restart-game");
@@ -66,6 +71,7 @@ canvas.addEventListener('click', (e) => {
       circlePos = { x: canvas.width / 2, y: canvas.height / 2 };  // Ball starts at center
       circleSpeed = 1.2; // Reset initial speed
       circleRadius = 30; // Reset initial radius
+      circleColor = getRandomColor(); // Reset random color
       circleVelocity = { x: 1, y: 1 }; // Reset initial velocity
       gameActive = true;
       gameOver = false;
@@ -123,6 +129,8 @@ function handleBallDisappearance() {
       isBallVisible = true;  // Make it visible again
       // Restart the timer when the ball reappears
       timeRemaining = timeLimit;
+      // Reduce the visibility duration of the ball as the score increases
+      disappearDuration = Math.max(300, 700 - Math.floor(score / 5) * 50); // Shorter disappear duration
     } else {
       isBallVisible = false;  // Make it disappear
     }
@@ -137,12 +145,34 @@ function handleBallDisappearance() {
   }
 }
 
+// Random color generator for the circle
+function getRandomColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+// Shake effect
+function applyShakeEffect() {
+  if (shakeDuration > 0) {
+    const shakeX = Math.random() * shakeIntensity - shakeIntensity / 2;
+    const shakeY = Math.random() * shakeIntensity - shakeIntensity / 2;
+    ctx.translate(shakeX, shakeY);
+    shakeDuration--;
+  } else {
+    shakeIntensity = 0; // Reset shake when duration is over
+  }
+}
+
 // Draw game elements
 function drawCircle() {
   if (isBallVisible) {
     ctx.beginPath();
     ctx.arc(circlePos.x, circlePos.y, circleRadius, 0, Math.PI * 2);
-    ctx.fillStyle = "black"; // Circle color
+    ctx.fillStyle = circleColor; // Use random color for the circle
     ctx.fill();
     ctx.closePath();
   }
@@ -182,6 +212,9 @@ function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   if (gameActive) {
+    // Apply shake effect
+    applyShakeEffect();
+
     // Handle ball disappearance logic
     handleBallDisappearance();
 
