@@ -108,12 +108,18 @@ function updateCirclePosition() {
   const angle = Math.random() * Math.PI * 2; // Random angle for direction
   const distance = Math.random() * 400 + 300; // Increased distance for movement
   const speedFactor = Math.random() * 2 + 0.5; // Introduce variability in speed
-  circlePos.x += Math.cos(angle) * distance * speedFactor;
-  circlePos.y += Math.sin(angle) * distance * speedFactor;
 
-  // Keep the circle within canvas bounds
-  circlePos.x = Math.max(circleRadius, Math.min(canvas.width - circleRadius, circlePos.x));
-  circlePos.y = Math.max(circleRadius, Math.min(canvas.height - circleRadius, circlePos.y));
+  // Calculate potential new positions
+  let newX = circlePos.x + Math.cos(angle) * distance * speedFactor;
+  let newY = circlePos.y + Math.sin(angle) * distance * speedFactor;
+
+  // Ensure that the circle stays within bounds (canvas edges)
+  newX = Math.max(circleRadius, Math.min(canvas.width - circleRadius, newX));
+  newY = Math.max(circleRadius, Math.min(canvas.height - circleRadius, newY));
+
+  // Update circle position
+  circlePos.x = newX;
+  circlePos.y = newY;
 }
 
 // Update circle's speed and size based on score
@@ -229,7 +235,7 @@ function gameLoop() {
     // Handle ball disappearance logic
     handleBallDisappearance();
 
-    // Apply shake effect
+    // Apply shake effect if needed
     applyShakeEffect();
 
     // Draw the circle at its current position
