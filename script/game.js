@@ -102,24 +102,37 @@ function checkButtonClick(x, y, button) {
          y > button.offsetTop && y < button.offsetTop + button.offsetHeight;
 }
 
-// Update circle position with a smooth motion pattern
+// Update circle position with complex movement patterns
 function updateCirclePosition() {
-  // Randomization for larger movement distances, making it much harder to catch
-  const angle = Math.random() * Math.PI * 2; // Random angle for direction
-  const distance = Math.random() * 400 + 300; // Increased distance for movement
-  const speedFactor = Math.random() * 2 + 0.5; // Introduce variability in speed
+  // Define a margin from the edges (e.g., 50px)
+  const margin = 50;
 
-  // Calculate potential new positions
-  let newX = circlePos.x + Math.cos(angle) * distance * speedFactor;
-  let newY = circlePos.y + Math.sin(angle) * distance * speedFactor;
+  // Randomly choose a movement pattern
+  const movementPattern = Math.random();
 
-  // Ensure that the circle stays within bounds (canvas edges)
-  newX = Math.max(circleRadius, Math.min(canvas.width - circleRadius, newX));
-  newY = Math.max(circleRadius, Math.min(canvas.height - circleRadius, newY));
+  if (movementPattern < 0.33) {
+    // Sinusoidal motion (wave-like)
+    const waveSpeed = Math.random() * 2 + 1;
+    circlePos.x += Math.sin(Date.now() / 1000 * waveSpeed) * 10; // Horizontal wave motion
+    circlePos.y += Math.cos(Date.now() / 1000 * waveSpeed) * 10; // Vertical wave motion
+  } else if (movementPattern < 0.66) {
+    // Spiral motion
+    const spiralSpeed = Math.random() * 2 + 1;
+    const angle = Date.now() / 1000 * spiralSpeed; // Angle for the spiral
+    const radius = Math.sin(angle) * 50 + 100; // Changing radius to form a spiral
+    circlePos.x += Math.cos(angle) * radius;
+    circlePos.y += Math.sin(angle) * radius;
+  } else {
+    // Random direction and speed changes
+    const angle = Math.random() * Math.PI * 2; // Random angle
+    const distance = Math.random() * 400 + 300; // Random distance
+    circlePos.x += Math.cos(angle) * distance;
+    circlePos.y += Math.sin(angle) * distance;
+  }
 
-  // Update circle position
-  circlePos.x = newX;
-  circlePos.y = newY;
+  // Ensure that the circle stays within bounds, leaving a margin from the edges
+  circlePos.x = Math.max(circleRadius + margin, Math.min(canvas.width - circleRadius - margin, circlePos.x));
+  circlePos.y = Math.max(circleRadius + margin, Math.min(canvas.height - circleRadius - margin, circlePos.y));
 }
 
 // Update circle's speed and size based on score
@@ -188,7 +201,7 @@ function drawCircle() {
   if (isBallVisible) {
     ctx.beginPath();
     ctx.arc(circlePos.x, circlePos.y, circleRadius, 0, Math.PI * 2);
-    ctx.fillStyle = circleColor; // Use random color for the circle
+    ctx.fillStyle = circleColor; // Circle color
     ctx.fill();
     ctx.closePath();
   }
@@ -201,10 +214,6 @@ function updateTimer() {
     timeRemaining -= elapsedTime;
     lastTimeCheck = currentTime;
 
-    // Gradually reduce time limit based on score
-    timeLimit = Math.max(0.5, 2 - Math.floor(score / 10) * 0.1); // Reduce time limit over time
-
-    // Check if time has run out
     if (timeRemaining <= 0) {
       gameActive = false;
       gameOver = true;
@@ -215,7 +224,6 @@ function updateTimer() {
 
 // Draw UI (buttons, score, etc.)
 function drawEndScreen() {
-  // Draw game over text and score
   ctx.fillStyle = "black";
   ctx.font = "30px Arial";
   ctx.textAlign = "center";
