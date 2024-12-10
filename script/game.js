@@ -21,7 +21,7 @@ let circleVelocity = { x: 1, y: 1 }; // Initial velocity direction
 
 // Ball disappearance properties
 let isBallVisible = true; // Flag to track visibility
-let disappearDuration = 500; // 500ms for the ball to disappear
+let disappearDuration = 700; // 700ms for the ball to disappear
 let lastDisappearTime = 0; // Time when the ball was last made to disappear
 let disappearThreshold = 20; // Threshold score for starting to disappear
 
