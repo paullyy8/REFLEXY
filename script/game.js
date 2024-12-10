@@ -229,7 +229,7 @@ function drawScoreAndTimer() {
 
   // Draw the border of the box
   ctx.lineWidth = 3;
-  ctx.strokeStyle = "white"; // White border
+  ctx.strokeStyle = "#81a1c1"; // New border color
   ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
 
   // Draw the score and timer inside the box
