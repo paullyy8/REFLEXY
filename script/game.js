@@ -207,7 +207,7 @@ function drawCircle() {
   }
 }
 
-// Draw the score and timer in a box
+// Draw the score and timer with a blurred background and a border
 function drawScoreAndTimer() {
   // Box properties
   const boxPadding = 20;
@@ -216,9 +216,21 @@ function drawScoreAndTimer() {
   const boxX = 50; // X position of the box
   const boxY = 50; // Y position of the box
 
+  // Create a blurred background using canvas filter
+  ctx.save();
+  ctx.filter = 'blur(8px)';
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+  ctx.fillRect(boxX - 10, boxY - 10, boxWidth + 20, boxHeight + 20); // Add a little padding around
+  ctx.restore();
+
   // Draw the background box (semi-transparent)
   ctx.fillStyle = "rgba(0, 0, 0, 0.5)"; // Black with some transparency
   ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+
+  // Draw the border of the box
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = "white"; // White border
+  ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
 
   // Draw the score and timer inside the box
   ctx.fillStyle = "white"; // Text color
