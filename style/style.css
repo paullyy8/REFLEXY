@@ -19,7 +19,7 @@ body {
   background-color: rgba(255, 255, 255, 0.9);
   border: 2px solid #ccc;
   border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Default shadow */
   backdrop-filter: blur(10px);
   transform: scale(0.98);
   transition: all 0.3s ease;
@@ -29,6 +29,7 @@ body {
 
 .container:hover {
   transform: scale(1);
+  box-shadow: 0 10px 30px rgba(46, 52, 64, 0.7); /* Updated shadow color to #2e3440 */
 }
 
 /* Heading */
