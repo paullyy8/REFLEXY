@@ -9,6 +9,7 @@ body {
   align-items: center;
   height: 100vh;
   transition: all 0.3s ease; /* Smooth transition for body */
+  box-sizing: border-box; /* Ensures padding and borders are included in the element's total width and height */
 }
 
 /* Container for content */
@@ -22,6 +23,8 @@ body {
   backdrop-filter: blur(10px);
   transform: scale(0.98);
   transition: all 0.3s ease;
+  width: 90%; /* Make container width flexible */
+  max-width: 500px; /* Maximum width for larger screens */
 }
 
 .container:hover {
@@ -105,5 +108,49 @@ button:active {
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Media Queries for Responsiveness */
+
+/* For devices with width less than or equal to 768px (tablet and mobile) */
+@media (max-width: 768px) {
+  .container {
+    width: 85%; /* Reduce container width */
+    padding: 20px; /* Less padding for smaller devices */
+  }
+
+  .container h1 {
+    font-size: 2.5rem; /* Smaller heading on tablets and mobile */
+  }
+
+  .container p {
+    font-size: 1.2rem; /* Smaller subheading */
+  }
+
+  button {
+    font-size: 1.4rem; /* Smaller button text */
+    padding: 10px 40px; /* Reduce button size */
+  }
+}
+
+/* For devices with width less than or equal to 480px (small mobile screens) */
+@media (max-width: 480px) {
+  .container {
+    width: 90%; /* Slightly more flexible container width */
+    padding: 15px; /* Even less padding */
+  }
+
+  .container h1 {
+    font-size: 2rem; /* Make the heading smaller */
+  }
+
+  .container p {
+    font-size: 1rem; /* Smaller subheading for mobile */
+  }
+
+  button {
+    font-size: 1.2rem; /* Further reduce button text size */
+    padding: 8px 30px; /* Adjust button padding */
   }
 }
